@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import jwt from 'express-jwt';
+import jsonwebtoken from 'jsonwebtoken';
 import productRoutes from './routes/product.js';
 import orderRoutes from './routes/order.js';
 
@@ -14,6 +15,11 @@ const auth = jwt({
 
 app.use('/api', auth, productRoutes);
 app.use('/api', auth, orderRoutes);
+
+app.post('/login', (req, res) => {
+  const token = jsonwebtoken.sign({ user: req.body.username }, 'my-secret-key');
+  res.json({ token });
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
