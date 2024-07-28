@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import jwt from 'express-jwt';
+import { expressjwt } from 'express-jwt';
 import jsonwebtoken from 'jsonwebtoken';
 import productRoutes from './routes/product.js';
 import orderRoutes from './routes/order.js';
@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-const auth = jwt({
+const auth = expressjwt({
   secret: process.env.SECRET_KEY,
   algorithms: ['HS256'],
 });
@@ -21,7 +21,7 @@ app.use('/api', auth, productRoutes);
 app.use('/api', auth, orderRoutes);
 
 app.post('/login', (req, res) => {
-  const token = jsonwebtoken.sign({ user: req.body.username }, process.env.SECRET_KEY); // Use environment variable
+  const token = jsonwebtoken.sign({ user: req.body.username }, process.env.SECRET_KEY);
   res.json({ token });
 });
 
