@@ -1,28 +1,34 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { expressjwt } from 'express-jwt';
 import jsonwebtoken from 'jsonwebtoken';
 import productRoutes from './routes/product.js';
 import orderRoutes from './routes/order.js';
 import sequelize from './models/index.js';
+import './models/associations.js'; 
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 
 const auth = expressjwt({
   secret: process.env.SECRET_KEY,
   algorithms: ['HS256'],
 });
 
-app.use('/api', auth, productRoutes);
-app.use('/api', auth, orderRoutes);
+app.use('/products', auth, productRoutes);
+app.use('/orders', auth, orderRoutes);
 
 app.post('/login', (req, res) => {
   const token = jsonwebtoken.sign({ user: req.body.username }, process.env.SECRET_KEY);
   res.json({ token });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
 
 sequelize.sync({ force: false })
