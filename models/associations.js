@@ -1,16 +1,15 @@
-import sequelize from './index.js'; // Import sequelize instance
+import sequelize from './index.js';
 import Product from './product.js';
 import Order from './order.js';
 import OrderProduct from './orderProduct.js';
 
-// Relationships
-Product.belongsToMany(Order, { through: OrderProduct });
-Order.belongsToMany(Product, { through: OrderProduct });
+Product.belongsToMany(Order, { through: OrderProduct, foreignKey: 'productId' });
+Order.belongsToMany(Product, { through: OrderProduct, foreignKey: 'orderId' });
 
 // Sync models
 (async () => {
   try {
-    await sequelize.sync({ force: false }); // Set to true only for initial setup
+    await sequelize.sync({ force: false }); 
     console.log('Database & tables created!');
   } catch (err) {
     console.error('Error syncing database:', err);

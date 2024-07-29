@@ -1,33 +1,49 @@
 import express from 'express';
 import Order from '../models/order.js';
-import { getShippingCost } from '../external/shipping.js';
+import Product from '../models/product.js';
+import OrderProduct from '../models/orderProduct.js';
+import { getShippingCost } from '../external/shipping.js'; 
 
 const router = express.Router();
 
-// Create a new order
-router.post('/orders', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
-    const shippingCost = await getShippingCost(productId, quantity);
-    const order = await Order.create({ ...req.body, shippingCost });
+    const { customerName, products, destination } = req.body;
+    const order = await Order.create({ customerName, totalAmount: 0 });
+    let totalAmount = 0;
+
+    for (const prod of products) {
+      const product = await Product.findByPk(prod.productId);
+      await OrderProduct.create({ orderId: order.id, productId: product.id, quantity: prod.quantity });
+      totalAmount += product.price * prod.quantity;
+    }
+
+    const shippingCost = await getShippingCost(5, destination); // Assuming a fixed weight for simplicity
+    totalAmount += shippingCost;
+
+    order.totalAmount = totalAmount;
+    await order.save();
     res.status(201).json(order);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// Get all orders
-router.get('/orders', async (req, res) => {
-  try {
-    const orders = await Order.findAll();
-    res.json(orders);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+router.get('/', async (req, res) => {
+    try {
+      const orders = await Order.findAll({
+        include: {
+          model: Product,
+          through: { attributes: ['quantity'] }
+        }
+      });
+      res.json(orders);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
 
-// Update an order
-router.put('/orders/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const order = await Order.findByPk(req.params.id);
     if (order) {
@@ -41,8 +57,7 @@ router.put('/orders/:id', async (req, res) => {
   }
 });
 
-// Delete an order
-router.delete('/orders/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const order = await Order.findByPk(req.params.id);
     if (order) {
