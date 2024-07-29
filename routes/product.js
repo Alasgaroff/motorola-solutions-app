@@ -3,8 +3,7 @@ import Product from '../models/product.js';
 
 const router = express.Router();
 
-// Create a new product
-router.post('/products', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const product = await Product.create(req.body);
     res.status(201).json(product);
@@ -13,8 +12,7 @@ router.post('/products', async (req, res) => {
   }
 });
 
-// Get all products
-router.get('/products', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const products = await Product.findAll();
     res.json(products);
@@ -23,8 +21,7 @@ router.get('/products', async (req, res) => {
   }
 });
 
-// Update a product
-router.put('/products/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (product) {
@@ -38,8 +35,7 @@ router.put('/products/:id', async (req, res) => {
   }
 });
 
-// Delete a product
-router.delete('/products/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (product) {
