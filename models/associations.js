@@ -5,13 +5,3 @@ import OrderProduct from './orderProduct.js';
 
 Product.belongsToMany(Order, { through: OrderProduct, foreignKey: 'productId' });
 Order.belongsToMany(Product, { through: OrderProduct, foreignKey: 'orderId' });
-
-// Sync models
-(async () => {
-  try {
-    await sequelize.sync({ force: false }); 
-    console.log('Database & tables created!');
-  } catch (err) {
-    console.error('Error syncing database:', err);
-  }
-})();

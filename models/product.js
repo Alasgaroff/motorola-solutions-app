@@ -18,6 +18,9 @@ const Product = sequelize.define('Product', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
-}, { tableName: 'Products' });
+}, { 
+  tableName: 'Product',
+  timestamps: true
+});
 
 export default Product;
