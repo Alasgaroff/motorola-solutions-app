@@ -83,6 +83,14 @@ Here is the main folder structure of the project:
    ```bash
    docker compose down
    ```
+## Test
+
+### Run Tests with Docker Compose
+
+   ```bash
+   docker compose run test
+   ```
+
 
 ### Important Docker-Specific Configurations
 

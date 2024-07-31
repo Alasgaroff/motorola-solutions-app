@@ -36,5 +36,21 @@ services:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
+  test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npm test
+    environment:
+      - NODE_ENV=test
+      - DB_HOST=database
+      - DB_USER=kalasga
+      - DB_PASSWORD=kalasga123
+      - DB_NAME=motorola_solutions_db
+      - JWT_SECRET=khayal-db123
+    depends_on:
+      - database
+    restart: "no"
+
 volumes:
   pgdata:
