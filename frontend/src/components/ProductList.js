@@ -63,7 +63,6 @@ const ProductList = () => {
 
   return (
     <div>
-      <h2>Product List</h2>
       {message && <p>{message}</p>}
       <ul>
         {products.map(product => (
