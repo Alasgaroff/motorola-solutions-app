@@ -1,6 +1,7 @@
 import express from 'express';
+import cors from 'cors';
 import { expressjwt } from 'express-jwt';
-import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import productRoutes from './routes/product.js';
 import orderRoutes from './routes/order.js';
 import sequelize from './models/index.js';
@@ -8,20 +9,39 @@ import './models/associations.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 const app = express();
+
+const allowedOrigins = [ 'http://localhost' ];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
 app.use(express.json());
 
-const auth = expressjwt({
-  secret: process.env.SECRET_KEY,
-  algorithms: ['HS256'],
-});
+const jwtSecret = process.env.JWT_SECRET || "default-secret";
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET is not defined in the environment variables');
+}
+app.use(
+  expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }).unless({ path: ['/login', '/signup'] })
+);
 
-app.use('/products', auth, productRoutes);
-app.use('/orders', auth, orderRoutes);
+// Routes
+app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
 
 app.post('/login', (req, res) => {
-  const token = jsonwebtoken.sign({ user: req.body.username }, process.env.SECRET_KEY);
+  const { username, password } = req.body;
+
+  const token = jwt.sign({ user: username }, jwtSecret);
+  console.log(`User ${username} logged in with token ${token}`);
   res.json({ token });
 });
 
@@ -31,7 +51,6 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
-// Sync models after associations are set up
 sequelize.sync({ force: false })
   .then(() => console.log('Database synced'))
   .catch(err => console.error('Error syncing database:', err));
