@@ -1,38 +1,130 @@
-.App {
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+h1 {
   text-align: center;
+  margin-top: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Container for the whole app */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+/* Navigation container styles */
+.nav-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Navigation buttons container styles */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Primary button styles */
+.primary-button {
+  background-color: #007bff;
   color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.App-link {
-  color: #61dafb;
+.primary-button a {
+  color: white;
+  text-decoration: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.primary-button:hover {
+  background-color: #0056b3;
+}
+
+/* Secondary button styles */
+.nav-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-button a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-button:hover {
+  background-color: #5a6268;
+}
+
+/* Login page styles */
+.login-message {
+  text-align: center;
+  color: #d9534f;
+  font-size: 18px;
+  margin: 20px 0;
+}
+
+/* Center content styles */
+.login-form-container,
+form,
+ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.login-form {
+  max-width: 500px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input,
+select,
+button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #d9534f;
+  text-align: center;
+  margin-top: 10px;
 }
