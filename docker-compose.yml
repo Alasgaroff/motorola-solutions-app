@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=database
+      - DB_USER=kalasga
+      - DB_PASSWORD=kalasga123
+      - DB_NAME=motorola_solutions_db
+      - JWT_SECRET=khayal-db123
+    depends_on:
+      - database
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  database:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: kalasga
+      POSTGRES_PASSWORD: kalasga123
+      POSTGRES_DB: motorola_solutions_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
